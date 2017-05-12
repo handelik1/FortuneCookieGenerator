@@ -1,6 +1,8 @@
 from bottle import *
 from random import *
 import sqlite3
+from sqlalchemy import *
+from sqlalchemy.orm import sessionmaker
 
 @route('/static/<filename:path>')
 def send_static(filename):
@@ -17,16 +19,23 @@ def index():
 def show_fortune():
 	info = {'title': 'Fortune Cookie Generator'
             }
-	db = sqlite3.connect('fortunes.db')
-	cursor = db.cursor()
-	cursor.execute("SELECT * from fortunes")
-	length = len(cursor.fetchall())
-	i = randint(1,length)
-	c = db.cursor()
-	c.execute("SELECT text FROM fortunes WHERE id = " + str(i))
-	data = c.fetchall()
-	c.close()
-	return template('fortunes.tpl', info, rows=data)
+
+	engine = create_engine('sqlite:///fortunes.db')
+	conn = engine.connect()
+	
+	result = conn.execute("select id from fortunes order by id desc limit 1")
+	for row in result:
+		i = row[0]
+
+	i = randint(1,i)
+	i = str(i)
+		
+	res = conn.execute("select text from fortunes where id = " + i)
+	
+	for row in res:
+		return template('fortunes.tpl', info, rows=row),
+	conn.close()
+
 	
 if __name__ == '__main__':
-	run(host = 'localhost', port = 8080, debug = True, reloader = 'True')
+	run(host = 'localhost', port = 8000, debug = True, reloader = 'True')

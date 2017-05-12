@@ -36,9 +36,7 @@
 									<td><img style = "position: relative; left: -1px; width: 575px" class = "center-block invisible" id = "paper" src="/static/images/fortune.png" height = "400px" width = "550px"/></td>
 									%for row in rows:
 										<tr>
-										%for col in row:
-											<td class = "invisible" id = "fortune" style = "font-weight: bold; width: 500px; position: relative; top: -212px; text-align: center; left: -10px">{{col}}</td>
-										%end
+											<td class = "invisible" id = "fortune" style = "font-weight: bold; width: 500px; position: relative; top: -212px; text-align: center; left: -10px">{{row}}</td>
 										</tr>
 									%end
 									
